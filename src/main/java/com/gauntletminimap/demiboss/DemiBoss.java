@@ -1,26 +1,27 @@
-package com.gauntletminimap.resourcenode;
+package com.gauntletminimap.demiboss;
 
-import net.runelite.api.GameObject;
+import com.gauntletminimap.resourcenode.ResourceNode;
+import net.runelite.api.NPC;
 import net.runelite.api.Point;
 import net.runelite.api.Skill;
 import net.runelite.client.game.SkillIconManager;
 
 import java.awt.image.BufferedImage;
 
-public abstract class ResourceNode {
+public abstract class DemiBoss {
 
-    private final GameObject gameObject;
+    private final NPC npc;
     private final Skill skill;
     private final BufferedImage image;
 
-    protected ResourceNode(GameObject gameObject, Skill skill) {
-        this.gameObject = gameObject;
+    protected DemiBoss(NPC npc, Skill skill) {
+        this.npc = npc;
         this.skill = skill;
         image = new SkillIconManager().getSkillImage(skill, true);
     }
 
-    public GameObject getGameObject() {
-        return gameObject;
+    public NPC getNpc() {
+        return npc;
     }
 
     public Skill getSkill() {
@@ -32,7 +33,7 @@ public abstract class ResourceNode {
     }
 
     public Point getMinimapLocation() {
-        Point point = gameObject.getMinimapLocation();
+        Point point = npc.getMinimapLocation();
 
         if (point == null)
             return null;
@@ -48,12 +49,12 @@ public abstract class ResourceNode {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        return gameObject.equals(((ResourceNode) o).getGameObject());
+        return npc.equals(((DemiBoss) o).getNpc());
     }
 
     @Override
     public int hashCode() {
-        return gameObject.hashCode();
+        return npc.hashCode();
     }
 
 }

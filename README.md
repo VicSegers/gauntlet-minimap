@@ -2,16 +2,20 @@
 
 ## Description
 
-A plugin for The Gauntlet to see the resource nodes on your minimap.
+A plugin for The Gauntlet to see the resource nodes and demi-bosses on your minimap.
 
-The plugin supports both the normal and the Corrupted Gauntlet.
+The plugin supports both the normal and the corrupted Gauntlet.
 
 ## Features
 
 - An icon of the resource node on your minimap.
 
-![minimap](images/minimap.png)
+![minimap](images/resources.png)
 
-- The ability to hide/display certain resource nodes.
+- An icon of the demi-boss on your minimap.
+
+![demi-boss](images/demi-boss.png)
+
+- The ability to hide/display certain resource nodes and demi-bosses.
 
 ![settings](images/settings.png)
