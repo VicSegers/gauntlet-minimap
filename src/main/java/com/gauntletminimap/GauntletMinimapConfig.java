@@ -5,8 +5,10 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
 
-@ConfigGroup("gauntletMinimap")
+@ConfigGroup(GauntletMinimapConfig.CONFIG_GROUP)
 public interface GauntletMinimapConfig extends Config {
+
+	String CONFIG_GROUP = "gauntletMinimap";
 
 	@ConfigSection(
 			name = "Resources",

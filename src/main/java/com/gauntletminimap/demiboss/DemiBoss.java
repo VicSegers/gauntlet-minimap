@@ -1,6 +1,6 @@
 package com.gauntletminimap.demiboss;
 
-import com.gauntletminimap.resourcenode.ResourceNode;
+import com.gauntletminimap.MinimapRenderable;
 import net.runelite.api.NPC;
 import net.runelite.api.Point;
 import net.runelite.api.Skill;
@@ -8,15 +8,13 @@ import net.runelite.client.game.SkillIconManager;
 
 import java.awt.image.BufferedImage;
 
-public abstract class DemiBoss {
+public abstract class DemiBoss implements MinimapRenderable {
 
     private final NPC npc;
-    private final Skill skill;
     private final BufferedImage image;
 
     protected DemiBoss(NPC npc, Skill skill) {
         this.npc = npc;
-        this.skill = skill;
         image = new SkillIconManager().getSkillImage(skill, true);
     }
 
@@ -24,14 +22,12 @@ public abstract class DemiBoss {
         return npc;
     }
 
-    public Skill getSkill() {
-        return skill;
-    }
-
+    @Override
     public BufferedImage getImage() {
         return image;
     }
 
+    @Override
     public Point getMinimapLocation() {
         Point point = npc.getMinimapLocation();
 

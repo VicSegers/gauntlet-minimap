@@ -1,9 +1,6 @@
 package com.gauntletminimap;
 
-import com.gauntletminimap.demiboss.Bear;
-import com.gauntletminimap.demiboss.DarkBeast;
-import com.gauntletminimap.demiboss.DemiBoss;
-import com.gauntletminimap.demiboss.Dragon;
+import com.gauntletminimap.demiboss.*;
 import com.gauntletminimap.resourcenode.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
@@ -14,11 +11,11 @@ import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,6 +31,9 @@ public class GauntletMinimapPlugin extends Plugin {
 	private Client client;
 
 	@Inject
+	private GauntletMinimapConfig config;
+
+	@Inject
 	private GauntletMinimapOverlay overlay;
 
 	@Inject
@@ -44,6 +44,8 @@ public class GauntletMinimapPlugin extends Plugin {
 
 	private final Set<ResourceNode> resourceNodes = new HashSet<>();
 	private final Set<DemiBoss> demiBosses = new HashSet<>();
+
+	protected static Set<String> displayableItems = new HashSet<>();
 
 	private static final Set<Integer> RESOURCE_NODE_IDS = ImmutableSet.of(
 			ObjectID.CRYSTAL_DEPOSIT,
@@ -122,7 +124,7 @@ public class GauntletMinimapPlugin extends Plugin {
 	}
 
 	@Subscribe
-	private void onNpcSpawned(final NpcSpawned event) throws IOException {
+	private void onNpcSpawned(final NpcSpawned event) {
 		if (!isInGauntlet())
 			return;
 
@@ -133,7 +135,7 @@ public class GauntletMinimapPlugin extends Plugin {
 	}
 
 	@Subscribe
-	private void onNpcDespawned(NpcDespawned event) throws IOException {
+	private void onNpcDespawned(NpcDespawned event) {
 		if (!isInGauntlet())
 			return;
 
@@ -141,6 +143,14 @@ public class GauntletMinimapPlugin extends Plugin {
 
 		if (DEMI_BOSS_IDS.contains(npc.getId()))
 			demiBosses.remove(npcToDemiBoss(npc));
+	}
+
+	@Subscribe
+	private void onConfigChanged(ConfigChanged event) {
+		if (!event.getGroup().equals(GauntletMinimapConfig.CONFIG_GROUP))
+			return;
+
+		setConfigs();
 	}
 
 	@Provides
@@ -178,7 +188,7 @@ public class GauntletMinimapPlugin extends Plugin {
 		}
 	}
 
-	private DemiBoss npcToDemiBoss(NPC npc) throws IOException {
+	private DemiBoss npcToDemiBoss(NPC npc) {
 		switch (npc.getId()) {
 			case NpcID.CRYSTALLINE_BEAR:
 			case NpcID.CORRUPTED_BEAR:
@@ -192,6 +202,25 @@ public class GauntletMinimapPlugin extends Plugin {
 			default:
 				return null;
 		}
+	}
+
+	private void setConfigs() {
+		updateDisplayableItems(config.oreDeposit(), "OreDeposit");
+		updateDisplayableItems(config.phrenRoots(), "PhrenRoot");
+		updateDisplayableItems(config.linumTirinum(), "LinumTirinum");
+		updateDisplayableItems(config.grymRoot(), "GrymRoot");
+		updateDisplayableItems(config.fishingSpot(), "FishingSpot");
+
+		updateDisplayableItems(config.bear(), "Bear");
+		updateDisplayableItems(config.dragon(), "Dragon");
+		updateDisplayableItems(config.darkBeast(), "DarkBeast");
+	}
+
+	private void updateDisplayableItems(boolean add, String className) {
+		if (add)
+			displayableItems.add(className);
+		else
+			displayableItems.remove(className);
 	}
 
 	public boolean isInNormal() {

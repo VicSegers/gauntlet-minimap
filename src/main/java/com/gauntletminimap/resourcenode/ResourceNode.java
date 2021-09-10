@@ -1,5 +1,6 @@
 package com.gauntletminimap.resourcenode;
 
+import com.gauntletminimap.MinimapRenderable;
 import net.runelite.api.GameObject;
 import net.runelite.api.Point;
 import net.runelite.api.Skill;
@@ -7,15 +8,13 @@ import net.runelite.client.game.SkillIconManager;
 
 import java.awt.image.BufferedImage;
 
-public abstract class ResourceNode {
+public abstract class ResourceNode implements MinimapRenderable {
 
     private final GameObject gameObject;
-    private final Skill skill;
     private final BufferedImage image;
 
     protected ResourceNode(GameObject gameObject, Skill skill) {
         this.gameObject = gameObject;
-        this.skill = skill;
         image = new SkillIconManager().getSkillImage(skill, true);
     }
 
@@ -23,14 +22,12 @@ public abstract class ResourceNode {
         return gameObject;
     }
 
-    public Skill getSkill() {
-        return skill;
-    }
-
+    @Override
     public BufferedImage getImage() {
         return image;
     }
 
+    @Override
     public Point getMinimapLocation() {
         Point point = gameObject.getMinimapLocation();
 
