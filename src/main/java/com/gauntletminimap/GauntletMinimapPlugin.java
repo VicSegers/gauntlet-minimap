@@ -26,7 +26,7 @@ import java.util.Set;
 @PluginDescriptor(
 		name = "Gauntlet Minimap",
 		description = "Displays the resource nodes of the Gauntlet on your minimap",
-		tags = {"corrupted","gauntlet","resource","nodes","minimap","hunllef","pve","pvm","minigame"}
+		tags = {"corrupted","gauntlet","resource","nodes","demi-boss","demiboss","minimap","hunllef","pve","pvm","minigame"}
 )
 public class GauntletMinimapPlugin extends Plugin {
 
