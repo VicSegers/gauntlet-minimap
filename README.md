@@ -19,3 +19,7 @@ The plugin supports both the normal and the corrupted Gauntlet.
 - The ability to hide/display certain resource nodes and demi-bosses.
 
 ![settings](images/settings.png)
+
+- The ability to track gathered resources and hide them from the minimap when a certain amount is reached.
+
+![settings](images/tracker.png)

@@ -111,4 +111,78 @@ public interface GauntletMinimapConfig extends Config {
 	default boolean darkBeast() {
 		return true;
 	}
+
+	@ConfigSection(
+			name = "Tracker",
+			description = "Resource tracker section.",
+			position = 2
+	)
+	String trackerSection = "tracker";
+
+	@ConfigItem(
+			keyName = "trackResources",
+			name = "Track Resources",
+			description = "Hides resource nodes after gathering a certain amount.",
+			section = "tracker",
+			position = 0
+	)
+	default boolean trackResources() {
+		return false;
+	}
+
+	@ConfigItem(
+			keyName = "ore",
+			name = "Ore",
+			description = "The desired amount of ore.",
+			section = "tracker",
+			position = 1
+	)
+	default int ore() {
+		return 3;
+	}
+
+	@ConfigItem(
+			keyName = "bark",
+			name = "Bark",
+			description = "The desired amount of bark.",
+			section = "tracker",
+			position = 2
+	)
+	default int bark() {
+		return 3;
+	}
+
+	@ConfigItem(
+			keyName = "fibre",
+			name = "Fibre",
+			description = "The desired amount of fibre.",
+			section = "tracker",
+			position = 3
+	)
+	default int fibre() {
+		return 3;
+	}
+
+	@ConfigItem(
+			keyName = "herb",
+			name = "Herb",
+			description = "The desired amount of herb.",
+			section = "tracker",
+			position = 4
+	)
+	default int herb() {
+		return 3;
+	}
+
+	@ConfigItem(
+			keyName = "fish",
+			name = "Fish",
+			description = "The desired amount of fish.",
+			section = "tracker",
+			position = 5
+	)
+	default int fish() {
+		return 20;
+	}
+
 }

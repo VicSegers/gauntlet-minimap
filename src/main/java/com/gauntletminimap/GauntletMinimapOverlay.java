@@ -21,14 +21,17 @@ public class GauntletMinimapOverlay extends Overlay {
 
     @Override
     public Dimension render(Graphics2D graphics) {
-        plugin.getResourceNodes().forEach(node -> renderImageOnMinimap(graphics, node));
-        plugin.getDemiBosses().forEach(demiBoss -> renderImageOnMinimap(graphics, demiBoss));
+        plugin.resourceNodes.forEach(node -> renderImageOnMinimap(graphics, node));
+        plugin.demiBosses.forEach(demiBoss -> renderImageOnMinimap(graphics, demiBoss));
 
         return null;
     }
 
     private void renderImageOnMinimap(Graphics2D graphics, MinimapRenderable minimapRenderable) {
-        if (!GauntletMinimapPlugin.displayableItems.contains(minimapRenderable.getClass().getSimpleName()))
+        final String className = minimapRenderable.getClass().getSimpleName();
+
+        if (!plugin.displayableItems.contains(className) || plugin.trackResources
+                && plugin.collectedResources.get(className) >= plugin.maxResources.get(className))
             return;
 
         Point minimapLocation = minimapRenderable.getMinimapLocation();

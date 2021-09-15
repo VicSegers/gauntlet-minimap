@@ -2,6 +2,7 @@ package com.gauntletminimap;
 
 import com.gauntletminimap.demiboss.*;
 import com.gauntletminimap.resourcenode.*;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
 import javax.inject.Inject;
@@ -16,7 +17,9 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Slf4j
@@ -42,10 +45,30 @@ public class GauntletMinimapPlugin extends Plugin {
 	private static final int CRYSTAL_GAUNTLET_REGION_ID = 7512;
 	private static final int CORRUPTED_GAUNTLET_REGION_ID = 7768;
 
-	private final Set<ResourceNode> resourceNodes = new HashSet<>();
-	private final Set<DemiBoss> demiBosses = new HashSet<>();
+	private final String DEPOSIT_ORE_CLASS_NAME = "OreDeposit";
+	private final String PHREN_ROOT_CLASS_NAME = "PhrenRoot";
+	private final String LINUM_TIRINUM_CLASS_NAME = "LinumTirinum";
+	private static final String GRYM_ROOT_CLASS_NAME = "GrymRoot";
+	private static final String FISHING_SPOT_CLASS_NAME = "FishingSpot";
 
-	protected static Set<String> displayableItems = new HashSet<>();
+	private static final String BEAR_CLASS_NAME = "Bear";
+	private static final String DRAGON_CLASS_NAME = "Dragon";
+	private static final String DARK_BEAST_CLASS_NAME = "DarkBeast";
+
+	private static final String MINING_MESSAGE = "You manage to mine some ore.";
+	private static final String WOODCUTTING_MESSAGE = "You get some bark.";
+	private static final String FARMING_MESSAGE = "You pick some fibre from the plant.";
+	private static final String HERBLORE_MESSAGE = "You pick a herb from the roots.";
+	private static final String FISHING_MESSAGE = "You manage to catch a fish.";
+
+	protected final Set<ResourceNode> resourceNodes = new HashSet<>();
+	protected final Set<DemiBoss> demiBosses = new HashSet<>();
+
+	protected Map<String, Integer> collectedResources;
+	protected Map<String, Integer> maxResources;
+	protected boolean trackResources;
+
+	protected Set<String> displayableItems = new HashSet<>();
 
 	private static final Set<Integer> RESOURCE_NODE_IDS = ImmutableSet.of(
 			ObjectID.CRYSTAL_DEPOSIT,
@@ -72,6 +95,16 @@ public class GauntletMinimapPlugin extends Plugin {
 	@Override
 	protected void startUp() {
 		resourceNodes.clear();
+
+		collectedResources = new HashMap<String, Integer>() {{
+			put(DEPOSIT_ORE_CLASS_NAME, 0);
+			put(PHREN_ROOT_CLASS_NAME, 0);
+			put(LINUM_TIRINUM_CLASS_NAME, 0);
+			put(GRYM_ROOT_CLASS_NAME, 0);
+			put(FISHING_SPOT_CLASS_NAME, 0);
+		}};
+
+		setConfigs();
 
 		if (isInGauntlet())
 			overlayManager.add(overlay);
@@ -153,17 +186,34 @@ public class GauntletMinimapPlugin extends Plugin {
 		setConfigs();
 	}
 
+	@Subscribe
+	private void onChatMessage(ChatMessage event) {
+		if (event.getType() == ChatMessageType.SPAM) {
+			switch (event.getMessage()) {
+				case MINING_MESSAGE:
+					collectedResources.merge(DEPOSIT_ORE_CLASS_NAME, 1, Integer::sum);
+					break;
+				case WOODCUTTING_MESSAGE:
+					collectedResources.merge(PHREN_ROOT_CLASS_NAME, 1, Integer::sum);
+					break;
+				case FARMING_MESSAGE:
+					collectedResources.merge(LINUM_TIRINUM_CLASS_NAME, 1, Integer::sum);
+					break;
+				case HERBLORE_MESSAGE:
+					collectedResources.merge(GRYM_ROOT_CLASS_NAME, 1, Integer::sum);
+					break;
+				case FISHING_MESSAGE:
+					collectedResources.merge(FISHING_SPOT_CLASS_NAME, 1, Integer::sum);
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
 	@Provides
 	GauntletMinimapConfig provideConfig(ConfigManager configManager) {
 		return configManager.getConfig(GauntletMinimapConfig.class);
-	}
-
-	protected Set<ResourceNode> getResourceNodes() {
-		return resourceNodes;
-	}
-
-	protected Set<DemiBoss> getDemiBosses() {
-		return demiBosses;
 	}
 
 	private ResourceNode gameObjectToResource(GameObject gameObject) {
@@ -205,15 +255,25 @@ public class GauntletMinimapPlugin extends Plugin {
 	}
 
 	private void setConfigs() {
-		updateDisplayableItems(config.oreDeposit(), "OreDeposit");
-		updateDisplayableItems(config.phrenRoots(), "PhrenRoot");
-		updateDisplayableItems(config.linumTirinum(), "LinumTirinum");
-		updateDisplayableItems(config.grymRoot(), "GrymRoot");
-		updateDisplayableItems(config.fishingSpot(), "FishingSpot");
+		updateDisplayableItems(config.oreDeposit(), DEPOSIT_ORE_CLASS_NAME);
+		updateDisplayableItems(config.phrenRoots(), PHREN_ROOT_CLASS_NAME);
+		updateDisplayableItems(config.linumTirinum(), LINUM_TIRINUM_CLASS_NAME);
+		updateDisplayableItems(config.grymRoot(), GRYM_ROOT_CLASS_NAME);
+		updateDisplayableItems(config.fishingSpot(), FISHING_SPOT_CLASS_NAME);
 
-		updateDisplayableItems(config.bear(), "Bear");
-		updateDisplayableItems(config.dragon(), "Dragon");
-		updateDisplayableItems(config.darkBeast(), "DarkBeast");
+		updateDisplayableItems(config.bear(), BEAR_CLASS_NAME);
+		updateDisplayableItems(config.dragon(), DRAGON_CLASS_NAME);
+		updateDisplayableItems(config.darkBeast(), DARK_BEAST_CLASS_NAME);
+
+		trackResources = config.trackResources();
+
+		maxResources = ImmutableMap.of(
+				DEPOSIT_ORE_CLASS_NAME, config.ore(),
+				PHREN_ROOT_CLASS_NAME, config.bark(),
+				LINUM_TIRINUM_CLASS_NAME, config.fibre(),
+				GRYM_ROOT_CLASS_NAME, config.herb(),
+				FISHING_SPOT_CLASS_NAME, config.fish()
+		);
 	}
 
 	private void updateDisplayableItems(boolean add, String className) {
