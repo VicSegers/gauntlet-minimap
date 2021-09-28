@@ -1,4 +1,4 @@
-# Gauntlet Minimap
+# Gauntlet Minimap v1.2 [![Plugin Installs](http://img.shields.io/endpoint?url=https://i.pluginhub.info/shields/installs/plugin/gauntlet-minimap&label=Active%20installs)](https://runelite.net/plugin-hub/Vic%20Segers)
 
 ## Description
 
