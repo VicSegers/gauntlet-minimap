@@ -42,12 +42,14 @@ public class GauntletMinimapPlugin extends Plugin {
 	@Inject
 	private OverlayManager overlayManager;
 
+	private boolean isStarted = false;
+
 	private static final int CRYSTAL_GAUNTLET_REGION_ID = 7512;
 	private static final int CORRUPTED_GAUNTLET_REGION_ID = 7768;
 
-	private final String DEPOSIT_ORE_CLASS_NAME = "OreDeposit";
-	private final String PHREN_ROOT_CLASS_NAME = "PhrenRoot";
-	private final String LINUM_TIRINUM_CLASS_NAME = "LinumTirinum";
+	private static final String DEPOSIT_ORE_CLASS_NAME = "OreDeposit";
+	private static final String PHREN_ROOT_CLASS_NAME = "PhrenRoot";
+	private static final String LINUM_TIRINUM_CLASS_NAME = "LinumTirinum";
 	private static final String GRYM_ROOT_CLASS_NAME = "GrymRoot";
 	private static final String FISHING_SPOT_CLASS_NAME = "FishingSpot";
 
@@ -64,9 +66,15 @@ public class GauntletMinimapPlugin extends Plugin {
 	protected final Set<ResourceNode> resourceNodes = new HashSet<>();
 	protected final Set<DemiBoss> demiBosses = new HashSet<>();
 
-	protected Map<String, Integer> collectedResources;
-	protected Map<String, Integer> maxResources;
 	protected boolean trackResources;
+	protected Map<String, Integer> maxResources;
+	protected Map<String, Integer> collectedResources = new HashMap<String, Integer>() {{
+		put(DEPOSIT_ORE_CLASS_NAME, 0);
+		put(PHREN_ROOT_CLASS_NAME, 0);
+		put(LINUM_TIRINUM_CLASS_NAME, 0);
+		put(GRYM_ROOT_CLASS_NAME, 0);
+		put(FISHING_SPOT_CLASS_NAME, 0);
+	}};
 
 	protected Set<String> displayableItems = new HashSet<>();
 
@@ -96,24 +104,30 @@ public class GauntletMinimapPlugin extends Plugin {
 	protected void startUp() {
 		resourceNodes.clear();
 
-		collectedResources = new HashMap<String, Integer>() {{
-			put(DEPOSIT_ORE_CLASS_NAME, 0);
-			put(PHREN_ROOT_CLASS_NAME, 0);
-			put(LINUM_TIRINUM_CLASS_NAME, 0);
-			put(GRYM_ROOT_CLASS_NAME, 0);
-			put(FISHING_SPOT_CLASS_NAME, 0);
-		}};
+		if (!isStarted) {
+			isStarted = true;
+			setConfigs();
 
-		setConfigs();
-
-		if (isInGauntlet())
-			overlayManager.add(overlay);
+			if (isInGauntlet())
+				overlayManager.add(overlay);
+		}
 	}
 
 	@Override
 	protected void shutDown() {
-		overlayManager.remove(overlay);
-		resourceNodes.clear();
+		if (isStarted) {
+			isStarted = false;
+			overlayManager.remove(overlay);
+			resourceNodes.clear();
+
+			collectedResources = new HashMap<String, Integer>() {{
+				put(DEPOSIT_ORE_CLASS_NAME, 0);
+				put(PHREN_ROOT_CLASS_NAME, 0);
+				put(LINUM_TIRINUM_CLASS_NAME, 0);
+				put(GRYM_ROOT_CLASS_NAME, 0);
+				put(FISHING_SPOT_CLASS_NAME, 0);
+			}};
+		}
 	}
 
 	@Subscribe
