@@ -47,16 +47,6 @@ public class GauntletMinimapPlugin extends Plugin {
 	private static final int CRYSTAL_GAUNTLET_REGION_ID = 7512;
 	private static final int CORRUPTED_GAUNTLET_REGION_ID = 7768;
 
-	private static final String DEPOSIT_ORE_CLASS_NAME = "OreDeposit";
-	private static final String PHREN_ROOT_CLASS_NAME = "PhrenRoot";
-	private static final String LINUM_TIRINUM_CLASS_NAME = "LinumTirinum";
-	private static final String GRYM_ROOT_CLASS_NAME = "GrymRoot";
-	private static final String FISHING_SPOT_CLASS_NAME = "FishingSpot";
-
-	private static final String BEAR_CLASS_NAME = "Bear";
-	private static final String DRAGON_CLASS_NAME = "Dragon";
-	private static final String DARK_BEAST_CLASS_NAME = "DarkBeast";
-
 	private static final String MINING_MESSAGE = "You manage to mine some ore.";
 	private static final String WOODCUTTING_MESSAGE = "You get some bark.";
 	private static final String FARMING_MESSAGE = "You pick some fibre from the plant.";
@@ -69,11 +59,11 @@ public class GauntletMinimapPlugin extends Plugin {
 	protected boolean trackResources;
 	protected Map<String, Integer> maxResources;
 	protected Map<String, Integer> collectedResources = new HashMap<String, Integer>() {{
-		put(DEPOSIT_ORE_CLASS_NAME, 0);
-		put(PHREN_ROOT_CLASS_NAME, 0);
-		put(LINUM_TIRINUM_CLASS_NAME, 0);
-		put(GRYM_ROOT_CLASS_NAME, 0);
-		put(FISHING_SPOT_CLASS_NAME, 0);
+		put(OreDeposit.class.getSimpleName(), 0);
+		put(PhrenRoot.class.getSimpleName(), 0);
+		put(LinumTirinum.class.getSimpleName(), 0);
+		put(GrymRoot.class.getSimpleName(), 0);
+		put(FishingSpot.class.getSimpleName(), 0);
 	}};
 
 	protected Set<String> displayableItems = new HashSet<>();
@@ -121,11 +111,11 @@ public class GauntletMinimapPlugin extends Plugin {
 			resourceNodes.clear();
 
 			collectedResources = new HashMap<String, Integer>() {{
-				put(DEPOSIT_ORE_CLASS_NAME, 0);
-				put(PHREN_ROOT_CLASS_NAME, 0);
-				put(LINUM_TIRINUM_CLASS_NAME, 0);
-				put(GRYM_ROOT_CLASS_NAME, 0);
-				put(FISHING_SPOT_CLASS_NAME, 0);
+				put(OreDeposit.class.getSimpleName(), 0);
+				put(PhrenRoot.class.getSimpleName(), 0);
+				put(LinumTirinum.class.getSimpleName(), 0);
+				put(GrymRoot.class.getSimpleName(), 0);
+				put(FishingSpot.class.getSimpleName(), 0);
 			}};
 		}
 	}
@@ -205,19 +195,19 @@ public class GauntletMinimapPlugin extends Plugin {
 		if (event.getType() == ChatMessageType.SPAM) {
 			switch (event.getMessage()) {
 				case MINING_MESSAGE:
-					collectedResources.merge(DEPOSIT_ORE_CLASS_NAME, 1, Integer::sum);
+					collectedResources.merge(OreDeposit.class.getSimpleName(), 1, Integer::sum);
 					break;
 				case WOODCUTTING_MESSAGE:
-					collectedResources.merge(PHREN_ROOT_CLASS_NAME, 1, Integer::sum);
+					collectedResources.merge(PhrenRoot.class.getSimpleName(), 1, Integer::sum);
 					break;
 				case FARMING_MESSAGE:
-					collectedResources.merge(LINUM_TIRINUM_CLASS_NAME, 1, Integer::sum);
+					collectedResources.merge(LinumTirinum.class.getSimpleName(), 1, Integer::sum);
 					break;
 				case HERBLORE_MESSAGE:
-					collectedResources.merge(GRYM_ROOT_CLASS_NAME, 1, Integer::sum);
+					collectedResources.merge(GrymRoot.class.getSimpleName(), 1, Integer::sum);
 					break;
 				case FISHING_MESSAGE:
-					collectedResources.merge(FISHING_SPOT_CLASS_NAME, 1, Integer::sum);
+					collectedResources.merge(FishingSpot.class.getSimpleName(), 1, Integer::sum);
 					break;
 				default:
 					break;
@@ -269,24 +259,24 @@ public class GauntletMinimapPlugin extends Plugin {
 	}
 
 	private void setConfigs() {
-		updateDisplayableItems(config.oreDeposit(), DEPOSIT_ORE_CLASS_NAME);
-		updateDisplayableItems(config.phrenRoots(), PHREN_ROOT_CLASS_NAME);
-		updateDisplayableItems(config.linumTirinum(), LINUM_TIRINUM_CLASS_NAME);
-		updateDisplayableItems(config.grymRoot(), GRYM_ROOT_CLASS_NAME);
-		updateDisplayableItems(config.fishingSpot(), FISHING_SPOT_CLASS_NAME);
+		updateDisplayableItems(config.oreDeposit(), OreDeposit.class.getSimpleName());
+		updateDisplayableItems(config.phrenRoots(), PhrenRoot.class.getSimpleName());
+		updateDisplayableItems(config.linumTirinum(), LinumTirinum.class.getSimpleName());
+		updateDisplayableItems(config.grymRoot(), GrymRoot.class.getSimpleName());
+		updateDisplayableItems(config.fishingSpot(), FishingSpot.class.getSimpleName());
 
-		updateDisplayableItems(config.bear(), BEAR_CLASS_NAME);
-		updateDisplayableItems(config.dragon(), DRAGON_CLASS_NAME);
-		updateDisplayableItems(config.darkBeast(), DARK_BEAST_CLASS_NAME);
+		updateDisplayableItems(config.bear(), Bear.class.getSimpleName());
+		updateDisplayableItems(config.dragon(), Dragon.class.getSimpleName());
+		updateDisplayableItems(config.darkBeast(), DarkBeast.class.getSimpleName());
 
 		trackResources = config.trackResources();
 
 		maxResources = ImmutableMap.of(
-				DEPOSIT_ORE_CLASS_NAME, config.ore(),
-				PHREN_ROOT_CLASS_NAME, config.bark(),
-				LINUM_TIRINUM_CLASS_NAME, config.fibre(),
-				GRYM_ROOT_CLASS_NAME, config.herb(),
-				FISHING_SPOT_CLASS_NAME, config.fish()
+				OreDeposit.class.getSimpleName(), config.ore(),
+				PhrenRoot.class.getSimpleName(), config.bark(),
+				LinumTirinum.class.getSimpleName(), config.fibre(),
+				GrymRoot.class.getSimpleName(), config.herb(),
+				FishingSpot.class.getSimpleName(), config.fish()
 		);
 	}
 
@@ -295,6 +285,12 @@ public class GauntletMinimapPlugin extends Plugin {
 			displayableItems.add(className);
 		else
 			displayableItems.remove(className);
+	}
+
+	protected boolean isDemiboss(String className) {
+		return className.equals(Bear.class.getSimpleName())
+				|| className.equals(Dragon.class.getSimpleName())
+				|| className.equals(DarkBeast.class.getSimpleName());
 	}
 
 	public boolean isInNormal() {

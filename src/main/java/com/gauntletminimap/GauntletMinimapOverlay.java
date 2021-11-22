@@ -30,7 +30,7 @@ public class GauntletMinimapOverlay extends Overlay {
     private void renderImageOnMinimap(Graphics2D graphics, MinimapRenderable minimapRenderable) {
         final String className = minimapRenderable.getClass().getSimpleName();
 
-        if (!plugin.displayableItems.contains(className) || plugin.trackResources
+        if (!plugin.displayableItems.contains(className) || plugin.trackResources && !plugin.isDemiboss(className)
                 && plugin.collectedResources.get(className) >= plugin.maxResources.get(className))
             return;
 
