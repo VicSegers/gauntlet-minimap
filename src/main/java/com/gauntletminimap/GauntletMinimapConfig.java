@@ -82,7 +82,7 @@ public interface GauntletMinimapConfig extends Config {
 	@ConfigItem(
 			keyName = "bear",
 			name = "Bear",
-			description = "Show the Fishing Spots (Fishing) on the minimap.",
+			description = "Show the Bear Demi-boss (Melee) on the minimap.",
 			section = "demiBosses",
 			position = 0
 	)
@@ -93,7 +93,7 @@ public interface GauntletMinimapConfig extends Config {
 	@ConfigItem(
 			keyName = "dragon",
 			name = "Dragon",
-			description = "Show the Fishing Spots (Fishing) on the minimap.",
+			description = "Show the Dragon Demi-boss (Magic) on the minimap.",
 			section = "demiBosses",
 			position = 1
 	)
@@ -104,7 +104,7 @@ public interface GauntletMinimapConfig extends Config {
 	@ConfigItem(
 			keyName = "darkBeast",
 			name = "Dark Beast",
-			description = "Show the Fishing Spots (Fishing) on the minimap.",
+			description = "Show the Dark beast Demi-boss (Ranged) on the minimap.",
 			section = "demiBosses",
 			position = 2
 	)

@@ -72,13 +72,13 @@ public class GauntletMinimapPlugin extends Plugin {
 			ObjectID.CRYSTAL_DEPOSIT,
 			ObjectID.CORRUPT_DEPOSIT,
 			ObjectID.PHREN_ROOTS,
-			ObjectID.PHREN_ROOTS_36066,
+			ObjectID.CORRUPT_PHREN_ROOTS,
 			ObjectID.LINUM_TIRINUM,
-			ObjectID.LINUM_TIRINUM_36072,
+			ObjectID.CORRUPT_LINUM_TIRINUM,
 			ObjectID.GRYM_ROOT,
-			ObjectID.GRYM_ROOT_36070,
+			ObjectID.CORRUPT_GRYM_ROOT,
 			ObjectID.FISHING_SPOT_36068,
-			ObjectID.FISHING_SPOT_35971
+			ObjectID.CORRUPT_FISHING_SPOT
 	);
 
 	private static final Set<Integer> DEMI_BOSS_IDS = ImmutableSet.of(
@@ -226,16 +226,16 @@ public class GauntletMinimapPlugin extends Plugin {
 			case ObjectID.CORRUPT_DEPOSIT:
 				return new OreDeposit(gameObject);
 			case ObjectID.PHREN_ROOTS:
-			case ObjectID.PHREN_ROOTS_36066:
+			case ObjectID.CORRUPT_PHREN_ROOTS:
 				return new PhrenRoot(gameObject);
 			case ObjectID.LINUM_TIRINUM:
-			case ObjectID.LINUM_TIRINUM_36072:
+			case ObjectID.CORRUPT_LINUM_TIRINUM:
 				return new LinumTirinum(gameObject);
 			case ObjectID.GRYM_ROOT:
-			case ObjectID.GRYM_ROOT_36070:
+			case ObjectID.CORRUPT_GRYM_ROOT:
 				return new GrymRoot(gameObject);
 			case ObjectID.FISHING_SPOT_36068:
-			case ObjectID.FISHING_SPOT_35971:
+			case ObjectID.CORRUPT_FISHING_SPOT:
 				return new FishingSpot(gameObject);
 			default:
 				return null;
